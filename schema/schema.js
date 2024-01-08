@@ -1,11 +1,7 @@
 const graphql = require('graphql');
-const _ = require('loadsh');
+const axios = require('axios');
 const { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLSchema } = graphql;
 
-const users = [
-  { id: '23', firstName: 'Bill', age: 20 },
-  { id: '47', firstName: 'Samantha', age: 30 }
-];
 const UserType = new GraphQLObjectType({
   name: 'User',
   fields: {
@@ -23,7 +19,7 @@ const RootQuery = new GraphQLObjectType({
       args: { id: { type: GraphQLString } }, //here pas the expectation of dynamic ids require in route
       resolve(parentValue, args) {
         // database part will come there, most imp function of resolve
-        return _.find(users, { id: args.id });
+        return axios.get(`http://localhost:3000/users/${args.id}`).then((resp) => resp.data);
       }
     }
   }
